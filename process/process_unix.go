@@ -1,3 +1,5 @@
+//go:build !windows
+
 /*
  * minicommon
  * Copyright (C) 2024 minicommon contributors
@@ -19,46 +21,7 @@
 package process
 
 import (
-	"os"
 	"os/exec"
-	"path/filepath"
-	"runtime"
 )
 
-func DoesFileExist(name string) bool {
-	if _, err := exec.LookPath(name); err != nil {
-		return false
-	}
-
-	return true
-}
-
-func RunFile(name string, hideWindow, relativeExecutable, redirectStd bool, arg ...string) error {
-	path := name
-
-	if relativeExecutable {
-		cwd, err := os.Executable()
-		if err != nil {
-			return err
-		}
-
-		path = filepath.Join(filepath.Dir(cwd), name)
-	}
-
-	cmd := exec.Command(path, arg...)
-
-	if redirectStd {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-	}
-
-	if runtime.GOOS == "windows" {
-		setHideWindowAttr(cmd, hideWindow)
-	}
-
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-
-	return nil
-}
+func setHideWindowAttr(cmd *exec.Cmd, hideWindow bool) {}

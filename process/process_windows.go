@@ -1,3 +1,5 @@
+//go:build windows
+
 /*
  * minicommon
  * Copyright (C) 2024 minicommon contributors
@@ -22,6 +24,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os/exec"
 	"path/filepath"
 	"syscall"
 	"unsafe"
@@ -158,4 +161,9 @@ func GetForegroundWindowTitle() (string, error) {
 	}
 
 	return "", nil
+}
+
+func setHideWindowAttr(cmd *exec.Cmd, hideWindow bool) {
+	// cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: 0x08000000}
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: hideWindow} //nolint:exhaustruct // wontfix
 }
