@@ -47,7 +47,7 @@ type Messenger struct {
 func DefaultDownloadMessenger() Messenger {
 	return Messenger{
 		StartDownload: func(fileName string) {
-			logger.SharedLogger.Infof("%s ... DOWNLOADING\n", fileName)
+			logger.SharedLogger.Infof("%s ... DOWNLOADING", fileName)
 		},
 	}
 }
@@ -61,7 +61,7 @@ func DefaultHashValidator(filePath, fileHash, fileName string) error {
 			hashSum := hex.EncodeToString(hash.Sum(nil))
 
 			if strings.ToLower(fileHash) == hashSum {
-				logger.SharedLogger.Infof("%s ... OK\n", fileName)
+				logger.SharedLogger.Infof("%s ... OK", fileName)
 				return nil
 			}
 		}
