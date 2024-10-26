@@ -132,4 +132,4 @@ func (l *Logger) wait() {
 	_, _ = fmt.Scanln()
 }
 
-var SharedLogger *Logger //nolint:gochecknoglobals // wontfix
+var SharedLogger = NewLogger(4, InfoLevel, os.Stdout, log.Lshortfile|log.LstdFlags) //nolint:gochecknoglobals,mnd // wontfix

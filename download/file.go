@@ -29,6 +29,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ricochhet/minicommon/logger"
 )
 
 var (
@@ -45,7 +47,7 @@ type Messenger struct {
 func DefaultDownloadMessenger() Messenger {
 	return Messenger{
 		StartDownload: func(fileName string) {
-			fmt.Printf("%s ... DOWNLOADING\n", fileName)
+			logger.SharedLogger.Infof("%s ... DOWNLOADING\n", fileName)
 		},
 	}
 }
@@ -59,7 +61,7 @@ func DefaultHashValidator(filePath, fileHash, fileName string) error {
 			hashSum := hex.EncodeToString(hash.Sum(nil))
 
 			if strings.ToLower(fileHash) == hashSum {
-				fmt.Printf("%s ... OK\n", fileName)
+				logger.SharedLogger.Infof("%s ... OK\n", fileName)
 				return nil
 			}
 		}

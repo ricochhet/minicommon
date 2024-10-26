@@ -21,18 +21,19 @@ package zip
 import (
 	"archive/zip"
 	"errors"
-	"fmt"
 	"io"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ricochhet/minicommon/logger"
 )
 
 func DefaultUnzipMessenger() Messenger {
 	return Messenger{
 		AddedFile: func(path string) {
-			fmt.Println("Unzipping file: " + path)
+			logger.SharedLogger.Infof("Unzipping file: %s", path)
 		},
 	}
 }

@@ -20,12 +20,13 @@ package zip
 
 import (
 	"archive/zip"
-	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ricochhet/minicommon/logger"
 )
 
 type Messenger struct {
@@ -35,7 +36,7 @@ type Messenger struct {
 func DefaultZipMessenger() Messenger {
 	return Messenger{
 		AddedFile: func(path string) {
-			fmt.Println("Adding file to zip: " + path)
+			logger.SharedLogger.Infof("Adding file to zip: %s", path)
 		},
 	}
 }
