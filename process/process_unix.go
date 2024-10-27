@@ -24,4 +24,4 @@ import (
 	"os/exec"
 )
 
-func setHideWindowAttr(cmd *exec.Cmd, hideWindow bool) {}
+func setHideWindowAttr(_ *exec.Cmd, _ bool) {}
