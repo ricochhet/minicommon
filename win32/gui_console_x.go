@@ -25,7 +25,7 @@ import (
 	"os"
 )
 
-func GuiConsoleHandle(args []string, minArgs int, cli, gui func(in, out, err io.Writer)) error {
+func GuiConsoleHandle(args []string, minArgs int, cli, gui func(in, out, err io.Writer), _ bool) error {
 	if len(args) > minArgs {
 		cli(os.Stdin, os.Stdout, os.Stderr)
 	} else {

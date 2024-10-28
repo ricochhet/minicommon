@@ -25,8 +25,8 @@ import (
 	"os"
 )
 
-func GuiConsoleHandle(args []string, minArgs int, cli, gui func(in, out, err io.Writer)) error {
-	if len(args) > minArgs {
+func GuiConsoleHandle(args []string, minArgs int, cli, gui func(in, out, err io.Writer), hasConsole bool) error {
+	if len(args) > minArgs { //nolint:nestif // wontfix
 		if err := AttachConsoleW(); err != nil {
 			return err
 		}
@@ -37,9 +37,13 @@ func GuiConsoleHandle(args []string, minArgs int, cli, gui func(in, out, err io.
 
 		var cIn, cOut, cErr io.Writer
 
-		cIn, cOut, cErr, err = AllocConsole()
-		if err != nil {
-			return err
+		if hasConsole {
+			cIn, cOut, cErr, err = AllocConsole()
+			if err != nil {
+				return err
+			}
+		} else {
+			cIn, cOut, cErr = os.Stdin, os.Stdout, os.Stderr
 		}
 
 		gui(cIn, cOut, cErr)
