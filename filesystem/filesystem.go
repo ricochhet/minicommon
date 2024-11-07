@@ -20,11 +20,14 @@ package filesystem
 
 import (
 	"bufio"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"io/fs"
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -36,6 +39,12 @@ var (
 	errNoPathFound = errors.New("file path could not be found in file name")
 	errFileExists  = errors.New("file exists in destination path")
 )
+
+var ReservedHostnames = []string{ //nolint:gochecknoglobals // wontfix
+	"COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+	"LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+	"PRN", "AUX", "NUL",
+}
 
 func Combine(path1 string, path2 ...string) string {
 	path := append([]string{path1}, path2...)
@@ -320,4 +329,61 @@ func IsEmpty(dir string) (bool, error) {
 	}
 
 	return false, err
+}
+
+func BytesToMap(data []byte) (map[string]interface{}, error) {
+	var jsonData map[string]interface{}
+	if err := json.Unmarshal(data, &jsonData); err != nil {
+		return nil, err
+	}
+
+	return jsonData, nil
+}
+
+func FilenameToMap(initial, filename string) (map[string]interface{}, error) {
+	data, err := os.ReadFile(initial + filename)
+	if err != nil {
+		return nil, err
+	}
+
+	var jsonData map[string]interface{}
+	if err := json.Unmarshal(data, &jsonData); err != nil {
+		return nil, err
+	}
+
+	return jsonData, nil
+}
+
+func FilenameToBytes(initial, filename string) ([]byte, error) {
+	data, err := os.ReadFile(initial + filename)
+	if err != nil {
+		return nil, err
+	}
+
+	var rawMessage json.RawMessage
+	if err := json.Unmarshal(data, &rawMessage); err != nil {
+		return nil, fmt.Errorf("invalid JSON format: %w", err)
+	}
+
+	return data, nil
+}
+
+func IsValidHostname(hostname string) bool {
+	if len(hostname) < 1 || len(hostname) > 15 {
+		return false
+	}
+
+	validNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-]+$`)
+
+	if !validNameRegex.MatchString(hostname) {
+		return false
+	}
+
+	for _, reserved := range ReservedHostnames {
+		if strings.EqualFold(hostname, reserved) {
+			return false
+		}
+	}
+
+	return true
 }
