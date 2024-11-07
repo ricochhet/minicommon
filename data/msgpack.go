@@ -26,7 +26,7 @@ import (
 	"github.com/vmihailenco/msgpack"
 )
 
-func Encode(value interface{}) ([]byte, error) {
+func MsgpackEncode(value interface{}) ([]byte, error) {
 	pk, err := msgpack.Marshal(value)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func Encode(value interface{}) ([]byte, error) {
 	return pk, nil
 }
 
-func Decode(data []byte) (interface{}, error) {
+func MsgpackDecode(data []byte) (interface{}, error) {
 	var content interface{}
 
 	err := msgpack.Unmarshal(data, &content)
@@ -46,13 +46,13 @@ func Decode(data []byte) (interface{}, error) {
 	return content, nil
 }
 
-func DecodeFile(filename string) (string, error) {
+func MsgpackDecodeFile(filename string) (string, error) {
 	content, err := filesystem.ReadFile(filename)
 	if err != nil {
 		return "", err
 	}
 
-	decdata, err := Decode(content)
+	decdata, err := MsgpackDecode(content)
 	if err != nil {
 		return "", err
 	}
@@ -65,13 +65,13 @@ func DecodeFile(filename string) (string, error) {
 	return string(jsoncontent), nil
 }
 
-func EncodeFile(filename string) ([]byte, error) {
+func MsgpackEncodeFile(filename string) ([]byte, error) {
 	content, err := filesystem.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	encdata, err := Encode(gjson.ParseBytes(content).Value())
+	encdata, err := MsgpackEncode(gjson.ParseBytes(content).Value())
 	if err != nil {
 		return nil, err
 	}
