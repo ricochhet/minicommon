@@ -19,7 +19,9 @@
 package charmbracelet
 
 import (
+	"fmt"
 	"io"
+	"os"
 	"time"
 
 	"github.com/charmbracelet/log"
@@ -30,7 +32,7 @@ type MultiLogger struct {
 	loggers []*log.Logger
 }
 
-var SharedLogger *MultiLogger //nolint:gochecknoglobals // wontfix
+var SharedLogger = NewMultiLogger(os.Stdout) //nolint:gochecknoglobals // wontfix
 
 func NewMultiLogger(wrs ...io.Writer) *MultiLogger {
 	loggers := new(MultiLogger)
@@ -60,9 +62,21 @@ func (ml *MultiLogger) Debug(msg any, kvs ...any) {
 	}
 }
 
+func (ml *MultiLogger) Debugf(format string, a ...any) {
+	for _, l := range ml.loggers {
+		l.Debug(fmt.Sprintf(format, a...))
+	}
+}
+
 func (ml *MultiLogger) Info(msg any, kvs ...any) {
 	for _, l := range ml.loggers {
 		l.Info(msg, kvs...)
+	}
+}
+
+func (ml *MultiLogger) Infof(format string, a ...any) {
+	for _, l := range ml.loggers {
+		l.Info(fmt.Sprintf(format, a...))
 	}
 }
 
@@ -72,9 +86,21 @@ func (ml *MultiLogger) Warn(msg any, kvs ...any) {
 	}
 }
 
+func (ml *MultiLogger) Warnf(format string, a ...any) {
+	for _, l := range ml.loggers {
+		l.Warn(fmt.Sprintf(format, a...))
+	}
+}
+
 func (ml *MultiLogger) Error(msg any, kvs ...any) {
 	for _, l := range ml.loggers {
 		l.Error(msg, kvs...)
+	}
+}
+
+func (ml *MultiLogger) Errorf(format string, a ...any) {
+	for _, l := range ml.loggers {
+		l.Error(fmt.Sprintf(format, a...))
 	}
 }
 
@@ -84,8 +110,20 @@ func (ml *MultiLogger) Fatal(msg any, kvs ...any) {
 	}
 }
 
+func (ml *MultiLogger) Fatalf(format string, a ...any) {
+	for _, l := range ml.loggers {
+		l.Fatal(fmt.Sprintf(format, a...))
+	}
+}
+
 func (ml *MultiLogger) Print(msg any, kvs ...any) {
 	for _, l := range ml.loggers {
 		l.Print(msg, kvs...)
+	}
+}
+
+func (ml *MultiLogger) Printf(format string, a ...any) {
+	for _, l := range ml.loggers {
+		l.Print(fmt.Sprintf(format, a...))
 	}
 }

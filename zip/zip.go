@@ -26,7 +26,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ricochhet/minicommon/logger"
+	"github.com/ricochhet/minicommon/charmbracelet"
 )
 
 type Messenger struct {
@@ -36,7 +36,7 @@ type Messenger struct {
 func DefaultZipMessenger() Messenger {
 	return Messenger{
 		AddedFile: func(path string) {
-			logger.SharedLogger.Infof("Adding file to zip: %s", path)
+			charmbracelet.SharedLogger.Infof("Adding file to zip: %s", path)
 		},
 	}
 }

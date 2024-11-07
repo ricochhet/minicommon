@@ -27,13 +27,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ricochhet/minicommon/logger"
+	"github.com/ricochhet/minicommon/charmbracelet"
 )
 
 func DefaultUnzipMessenger() Messenger {
 	return Messenger{
 		AddedFile: func(path string) {
-			logger.SharedLogger.Infof("Unzipping file: %s", path)
+			charmbracelet.SharedLogger.Infof("Unzipping file: %s", path)
 		},
 	}
 }
